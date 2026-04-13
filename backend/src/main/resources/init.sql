@@ -10,7 +10,7 @@ USE admin_system;
 -- 1. 用户表（由 JPA 自动创建，可手动补充初始用户）
 -- ==============================================================
 INSERT INTO sys_user (id, username, password, nickname, email, status, create_time, update_time)
-VALUES (1, 'admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5EH', '超级管理员', 'admin@example.com', 1, NOW(), NOW())
+VALUES (1, 'admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5EH', '超级管理员', 'admin@yourcompany.com', 1, NOW(), NOW())
 ON DUPLICATE KEY UPDATE username=username;
 
 -- ==============================================================

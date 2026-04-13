@@ -18,10 +18,10 @@
       <el-col :span="12">
         <el-card header="系统说明" shadow="hover">
           <el-descriptions :column="1" border>
-            <el-descriptions-item label="系统名称">动态菜单权限管理系统</el-descriptions-item>
-            <el-descriptions-item label="技术栈">SpringBoot 3 + MyBatis-Plus + JWT + Vue3 + Element Plus</el-descriptions-item>
-            <el-descriptions-item label="权限模型">RBAC（基于角色的访问控制）+ 用户组</el-descriptions-item>
-            <el-descriptions-item label="功能模块">用户管理、角色管理、菜单管理、用户组管理</el-descriptions-item>
+            <el-descriptions-item label="系统名称">{{ systemIntro.name }}</el-descriptions-item>
+            <el-descriptions-item label="技术栈">{{ systemIntro.tech }}</el-descriptions-item>
+            <el-descriptions-item label="权限模型">{{ systemIntro.rbac }}</el-descriptions-item>
+            <el-descriptions-item label="功能模块">{{ systemIntro.modules }}</el-descriptions-item>
           </el-descriptions>
         </el-card>
       </el-col>
@@ -47,9 +47,18 @@ import { useUserStore } from '@/store/user'
 import { getUserPage } from '@/api/user'
 import { getRolePage } from '@/api/role'
 import { getMenuTree } from '@/api/menu'
+import { getSystemIntro } from '@/api/config'
 import request from '@/utils/request'
 
 const userStore = useUserStore()
+
+// 系统说明
+const systemIntro = ref({
+  name: '动态菜单权限管理系统',
+  tech: 'SpringBoot 3 + MyBatis-Plus + JWT + Vue3 + Element Plus',
+  rbac: 'RBAC（基于角色的访问控制）+ 用户组',
+  modules: '用户管理、角色管理、菜单管理、用户组管理'
+})
 
 const stats = ref([
   { title: '用户总数', value: 0, icon: 'User',       color: '#409eff' },
@@ -67,18 +76,28 @@ function countTree(list) {
 
 onMounted(async () => {
   try {
-    const [userRes, roleRes, menuRes, groupRes] = await Promise.allSettled([
+    const [userRes, roleRes, menuRes, groupRes, introRes] = await Promise.allSettled([
       getUserPage({ page: 1, size: 1 }),
       getRolePage({ page: 1, size: 1 }),
       getMenuTree(),
-      request.get('/system/group/page', { params: { page: 1, size: 1 } })
+      request.get('/system/group/page', { params: { page: 1, size: 1 } }),
+      getSystemIntro()
     ])
     if (userRes.status === 'fulfilled')  stats.value[0].value = userRes.value?.data?.total ?? 0
     if (roleRes.status === 'fulfilled')  stats.value[1].value = roleRes.value?.data?.total ?? 0
     if (menuRes.status === 'fulfilled')  stats.value[2].value = countTree(menuRes.value?.data ?? [])
     if (groupRes.status === 'fulfilled') stats.value[3].value = groupRes.value?.data?.total ?? 0
+    // 加载系统说明
+    if (introRes.status === 'fulfilled' && introRes.value?.data) {
+      try {
+        const data = JSON.parse(introRes.value.data)
+        Object.assign(systemIntro.value, data)
+      } catch (e) {
+        // 解析失败，使用默认值
+      }
+    }
   } catch (e) {
-    // 接口异常时保持显示 0
+    // 接口异常时保持显示默认值
   }
 })
 </script>

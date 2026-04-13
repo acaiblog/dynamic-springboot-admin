@@ -8,3 +8,5 @@ export const updateConfig = (id, data) => request.put(`/system/config/${id}`, da
 export const deleteConfig = (id) => request.delete(`/system/config/${id}`)
 export const getSystemTitle = () => request.get('/system/config/title')
 export const setSystemTitle = (title) => request.put('/system/config/title', { title })
+export const getSystemIntro = () => request.get('/system/config/intro')
+export const setSystemIntro = (intro) => request.put('/system/config/intro', { intro })

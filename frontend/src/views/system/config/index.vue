@@ -28,6 +28,32 @@
       </el-form>
     </el-card>
 
+    <!-- 系统说明设置 -->
+    <el-card class="intro-card" shadow="never">
+      <template #header>
+        <div class="card-header">
+          <span>系统说明设置</span>
+        </div>
+      </template>
+      <el-form :model="systemIntro" label-width="120px" style="max-width: 600px">
+        <el-form-item label="系统名称">
+          <el-input v-model="systemIntro.name" placeholder="如：动态菜单权限管理系统" />
+        </el-form-item>
+        <el-form-item label="技术栈">
+          <el-input v-model="systemIntro.tech" placeholder="如：SpringBoot 3 + Vue3 + Element Plus" />
+        </el-form-item>
+        <el-form-item label="权限模型">
+          <el-input v-model="systemIntro.rbac" placeholder="如：RBAC（基于角色的访问控制）" />
+        </el-form-item>
+        <el-form-item label="功能模块">
+          <el-input v-model="systemIntro.modules" placeholder="如：用户管理、角色管理、菜单管理" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleSaveIntro">保存系统说明</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+
     <!-- 系统配置列表 -->
     <el-table v-loading="loading" :data="tableData" border stripe class="mt-16">
       <el-table-column prop="id" label="ID" width="80" />
@@ -79,7 +105,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { Search, Refresh, Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getConfigList, createConfig, updateConfig, deleteConfig, getSystemTitle, setSystemTitle } from '@/api/config'
+import { getConfigList, createConfig, updateConfig, deleteConfig, getSystemTitle, setSystemTitle, getSystemIntro, setSystemIntro } from '@/api/config'
 import { useConfigStore } from '@/store/config'
 
 const configStore = useConfigStore()
@@ -91,6 +117,12 @@ const dialogTitle = ref('新增配置')
 const formRef = ref()
 const form = reactive({ id: undefined, configKey: '', configValue: '', remark: '', status: 1 })
 const systemTitle = ref('')
+const systemIntro = reactive({
+  name: '',
+  tech: '',
+  rbac: '',
+  modules: ''
+})
 
 const rules = {
   configKey: [{ required: true, message: '请输入配置键', trigger: 'blur' }],
@@ -139,10 +171,26 @@ async function handleSaveTitle() {
   ElMessage.success('标题保存成功')
 }
 
+async function handleSaveIntro() {
+  const intro = JSON.stringify(systemIntro)
+  await setSystemIntro(intro)
+  ElMessage.success('系统说明保存成功')
+}
+
 onMounted(async () => {
   loadData()
-  const res = await getSystemTitle()
-  systemTitle.value = res.data || ''
+  const titleRes = await getSystemTitle()
+  systemTitle.value = titleRes.data || ''
+  // 加载系统说明
+  const introRes = await getSystemIntro()
+  if (introRes.data) {
+    try {
+      const introData = JSON.parse(introRes.data)
+      Object.assign(systemIntro, introData)
+    } catch (e) {
+      // 解析失败，使用默认值
+    }
+  }
 })
 
 const query = reactive({ name: '' })
@@ -150,6 +198,9 @@ const query = reactive({ name: '' })
 
 <style scoped>
 .title-card {
+  margin-bottom: 16px;
+}
+.intro-card {
   margin-bottom: 16px;
 }
 .mt-16 {

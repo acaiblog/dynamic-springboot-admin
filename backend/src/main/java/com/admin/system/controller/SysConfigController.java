@@ -62,4 +62,16 @@ public class SysConfigController {
         configService.saveOrUpdate("system_title", body.get("title"));
         return Result.ok("标题更新成功", null);
     }
+
+    @GetMapping("/intro")
+    public Result<String> getIntro() {
+        String intro = configService.getValueByKey("system_intro").orElse("");
+        return Result.ok(intro);
+    }
+
+    @PutMapping("/intro")
+    public Result<Void> setIntro(@RequestBody java.util.Map<String, String> body) {
+        configService.saveOrUpdate("system_intro", body.get("intro"));
+        return Result.ok("系统说明更新成功", null);
+    }
 }
