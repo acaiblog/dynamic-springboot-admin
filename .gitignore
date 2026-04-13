@@ -1,0 +1,94 @@
+# ====================
+# Java / Maven
+# ====================
+backend/target/
+backend/*.class
+backend/*.jar
+backend/*.war
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/.project
+backend/.classpath
+data/
+
+# ====================
+# Node.js / Frontend
+# ====================
+frontend/node_modules/
+frontend/dist/
+frontend/.DS_Store
+frontend/.env
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/.pnpm-store
+
+# ====================
+# IDE
+# ====================
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+.vscode/
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+
+# ====================
+# Database (H2 file)
+# ====================
+data/
+*.h2.db
+*.h2.trace.db
+*.mv.db
+*.trace.db
+
+# ====================
+# Logs
+# ====================
+*.log
+logs/
+*.log.*
+
+# ====================
+# OS
+# ====================
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ====================
+# Build artifacts
+# ====================
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# ====================
+# Config (local overrides)
+# ====================
+application-local.yml
+application-local.properties
+*.local.yml
+*.local.properties
+
+# ====================
+# Temp files
+# ====================
+*.tmp
+*.temp
+.cache/
